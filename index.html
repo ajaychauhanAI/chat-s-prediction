@@ -5,405 +5,1358 @@
   <title>Love Theorem Chat Predictor — Fixed Charts</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --bg:#f5f8fc; --card:#fff; --muted:#64748b; --accent:#0ea5b7;
-      --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
-    }
-    body{font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#022;margin:0;padding:0}
-    header{background:#042f3f;color:#e6f7ff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
-    .wrap{max-width:1000px;margin:18px auto;padding:16px}
-    .card{background:var(--card);border-radius:12px;padding:14px;margin:12px 0;box-shadow:0 8px 24px rgba(2,6,23,0.06)}
-    label{display:block;font-weight:700;margin-top:8px}
-    input[type=file], input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;box-sizing:border-box}
-    button{background:var(--accent);color:white;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
-    .small{font-size:13px;color:var(--muted)}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px solid #eef2f7;text-align:left}
-    .meter{height:14px;border-radius:999px;background:#eef6f8;overflow:hidden}
-    .meter > div{height:100%}
-    canvas{display:block;width:100% !important;height:260px !important}
-    pre{white-space:pre-wrap;word-break:break-word;background:#0b1220;color:#e6f2f1;padding:8px;border-radius:8px}
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --muted:#64748b;
+  --accent:#0ea5b7;
+
+  --good:#10b981;
+  --warn:#f59e0b;
+  --bad:#ef4444;
+
+  --radius:14px;
+  --border:#e6eef6;
+
+  --shadow-sm:0 4px 14px rgba(0,0,0,0.06);
+  --shadow-md:0 10px 28px rgba(2,6,23,0.08);
+  --shadow-lg:0 18px 40px rgba(2,6,23,0.12);
+
+  --gradient:linear-gradient(135deg,#0ea5b7,#22d3ee);
+}
+
+/* RESET */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:#0f172a;
+  line-height:1.5;
+}
+
+/* HEADER */
+
+header{
+  background:linear-gradient(135deg,#042f3f,#064e63);
+  color:white;
+  padding:18px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  box-shadow:var(--shadow-sm);
+}
+
+header strong{
+  font-size:18px;
+  letter-spacing:.3px;
+}
+
+/* CONTAINER */
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:24px;
+}
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:16px;
+}
+
+/* CARD */
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-md);
+  transition:all .25s ease;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* TEXT */
+
+.small{
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* FORM */
+
+label{
+  display:block;
+  font-weight:600;
+  margin-top:12px;
+  margin-bottom:4px;
+}
+
+input[type=file],
+input[type=text]{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+  transition:.2s;
+}
+
+input:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(14,165,183,.15);
+}
+
+/* BUTTON */
+
+button{
+  background:var(--gradient);
+  color:white;
+  border:none;
+  padding:10px 18px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+}
+
+button:active{
+  transform:scale(.96);
+}
+
+/* BUTTON GROUP */
+
+.action-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th{
+  text-align:left;
+  font-weight:600;
+  font-size:13px;
+  color:var(--muted);
+}
+
+th,td{
+  padding:9px;
+  border-bottom:1px solid #eef2f7;
+  font-size:14px;
+}
+
+/* PROGRESS BAR */
+
+.meter{
+  height:14px;
+  border-radius:999px;
+  background:#eef6f8;
+  overflow:hidden;
+  margin-top:6px;
+}
+
+.meter > div{
+  height:100%;
+  transition:width .4s ease;
+}
+
+/* BADGE */
+
+.love-badge{
+  background:rgba(14,165,183,.12);
+  color:#0ea5b7;
+  font-weight:600;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:13px;
+}
+
+/* PREVIEW BOX */
+
+.preview-box{
+  max-height:340px;
+  overflow:auto;
+  margin-top:10px;
+}
+
+/* CHART */
+
+canvas{
+  width:100% !important;
+  height:260px !important;
+}
+
+/* CODE BLOCK */
+
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#0b1220;
+  color:#e6f2f1;
+  padding:12px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+/* STATUS */
+
+.status{
+  margin-top:10px;
+}
+
+/* TABLET */
+
+@media (max-width:900px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+
+  .wrap{
+    padding:18px;
+  }
+
+}
+
+/* MOBILE */
+
+@media (max-width:600px){
+
+  body{
+    font-size:14px;
+  }
+
+  .wrap{
+    padding:14px;
+  }
+
+  button{
+    width:100%;
+  }
+
+  .action-buttons{
+    flex-direction:column;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  canvas{
+    height:220px !important;
+  }
+
+}
+
+.report-grid{
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+
+}
+
+.chart-card{
+
+  background:white;
+  padding:18px;
+  border-radius:14px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+
+}
+
+.chart-card canvas{
+
+  width:100% !important;
+  height:300px !important;
+
+}
+
+/* doughnut chart fix */
+
+#dominanceChart{
+
+  max-height:320px !important;
+
+}
+
+/* mobile */
+
+@media (max-width:900px){
+
+  .report-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
   </style>
 </head>
 <body>
-  <header>
-    <div><strong>Love Theorem Predictor</strong></div>
-    <div class="small">Love = 50 + R + E + M + C — Upload WhatsApp .txt (recommended) or .pdf</div>
-  </header>
+<header class="header">
+  <div class="header-left">
+    <h1>💙 Love Theorem Analyzer</h1>
+    <p class="small">
+      Smart chat analysis using the formula  
+      <strong>Love = 50 + R + E + M + C + S</strong>
+    </p>
+  </div>
+</header>
 
-  <div class="wrap">
-    <div class="card" style="display:grid;grid-template-columns:1fr 360px;gap:12px">
-      <div>
-        <label>1) Upload chat file (.txt recommended, PDF supported)</label>
-        <input id="file" type="file" accept="application/pdf,text/plain" />
-        <label>2) Target name (jiski interest check karna hai)</label>
-        <input id="target" placeholder="e.g., Priya (partial/complete name)" />
-        <div style="margin-top:10px;display:flex;gap:8px">
-          <button id="analyze">Predict Love</button>
-          <button id="downloadJson" style="display:none">Download JSON</button>
-        </div>
-        <div id="status" class="small" style="margin-top:10px">Choose file and click <strong>Predict Love</strong>.</div>
+<div class="wrap">
 
-        <div class="card" style="margin-top:12px">
-          <strong>Components explanation</strong>
-          <ul class="small">
-            <li><strong>R</strong> — Reply-time (0–30). Jaldi reply → zyada.</li>
-            <li><strong>E</strong> — Emoji usage (0–20).</li>
-            <li><strong>M</strong> — Message balance (0–20) between target & you.</li>
-            <li><strong>C</strong> — Consistency (0–20) across days.</li>
-          </ul>
-        </div>
+  <!-- MAIN GRID -->
+  <div class="grid">
+
+    <!-- LEFT PANEL -->
+    <div class="card">
+
+      <h3>Chat Analysis</h3>
+      <p class="small">Upload WhatsApp exported chat file and analyze interaction patterns.</p>
+
+      <label>Upload Chat File</label>
+      <input id="file" type="file" accept=".zip,.txt,.pdf,image/*" multiple />
+
+      <label style="margin-top:12px">Target Name</label>
+      <input id="target" placeholder="Example: Sneha" />
+
+      <div class="action-buttons">
+        <button id="analyze">🔍 Analyze Chat</button>
+        <button id="downloadJson" style="display:none">⬇ Download Report</button>
       </div>
 
-      <div>
-        <div class="card" style="margin:0">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><strong>Parsed preview</strong><div class="small">(first 25 parsed lines)</div></div>
-            <div id="badge" class="small" style="background:#eef6f8;padding:6px;border-radius:999px">Love —</div>
-          </div>
-          <div id="preview" style="margin-top:8px;max-height:340px;overflow:auto"></div>
-        </div>
+      <div id="status" class="status small">
+        Select a chat file and click <strong>Analyze Chat</strong>.
       </div>
+
+      <!-- COMPONENT INFO -->
+      <div class="card component-card">
+        <h4>Analysis Components</h4>
+
+        <ul class="component-list">
+
+          <li>
+            <span class="tag">R</span>
+            Reply Time Score  
+            <span class="small">Faster replies increase score</span>
+          </li>
+
+          <li>
+            <span class="tag">E</span>
+            Emoji Interaction  
+            <span class="small">More emojis show emotional engagement</span>
+          </li>
+
+          <li>
+            <span class="tag">M</span>
+            Message Balance  
+            <span class="small">Balanced conversation increases score</span>
+          </li>
+
+          <li>
+            <span class="tag">C</span>
+            Chat Consistency  
+            <span class="small">Frequent interaction across days</span>
+          </li>
+
+          <li>
+            <span class="tag">S</span>
+            Sentiment Score  
+            <span class="small">Positive emotional tone in messages</span>
+          </li>
+
+        </ul>
+      </div>
+
     </div>
 
-    <div id="report" class="card" style="display:none"></div>
+
+    <!-- RIGHT PANEL -->
+    <div class="card">
+
+      <div class="preview-header">
+        <div>
+          <h3>Parsed Preview</h3>
+          <p class="small">Preview of parsed messages (analysis uses full chat)</p>
+        </div>
+
+        <div id="badge" class="love-badge">
+          Love —
+        </div>
+      </div>
+
+      <div id="preview" class="preview-box"></div>
+
+    </div>
+
   </div>
 
+
+  <!-- RESULT SECTION -->
+<div id="report" class="report-grid" style="display:none">
+
+  <div class="chart-card">
+    <h3>📈 Conversation Dominance</h3>
+    <canvas id="dominanceChart"></canvas>
+  </div>
+
+</div>
+
+</div>
   <!-- pdf.js + worker -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script> if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'; </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sentiment@5.0.2/dist/sentiment.min.js"></script>
 
   <script>
-  // ---------- helpers ----------
-  const setStatus = (m,err=false)=>{ const s=document.getElementById('status'); s.textContent=m; s.style.color = err? '#b91c1c' : '#022'; console.log(m); };
-  const esc = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  function countEmojis(text){ try{ return (text.match(/(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu)||[]).length }catch(e){ return 0; } }
-  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+// ===============================
+// CONFIG
+// ===============================
 
-  // ---------- parsing ----------
-  const patterns = [
-    /(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4}),?\s*(\d{1,2}:\d{2}(?::\d{2})?(?:\s?[APMapm]{2})?)\s*-\s*([^:]+):\s*(.*)$/,
-    /(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4})\s+(\d{1,2}:\d{2})\s*-\s*([^:]+):\s*(.*)$/,
-    /^\[?(\d{1,2}:\d{2})\]?\s*-?\s*([^:]+):\s*(.*)$/,
-    /^([^:]{1,140}):\s*(.*)$/
-  ];
+const CONFIG = {
+  BASE_SCORE:50,
+  MAX_SCORE:200,
+  MAX_SENTIMENT:20,
+  NIGHT_START:22,
+  NIGHT_END:2,
+  DEBUG:false
+};
 
-  function tryParseDate(ds, ts){
-    if(!ds && !ts) return null;
-    const tries = [];
-    if(ds && ts) tries.push(ds + ' ' + ts);
-    if(ds) tries.push(ds);
-    if(ds) tries.push(ds.replace(/\./g,'/'));
-    const parts = (ds||'').match(/\d+/g) || [];
-    if(parts.length>=3) tries.push([parts[1],parts[0],parts[2]].join('/') + (ts?(' '+ts):''));
-    for(const t of tries){ const v = Date.parse(t); if(!isNaN(v)) return new Date(v); }
-    const v2 = Date.parse((ds||'') + ' ' + (ts||''));
-    return isNaN(v2) ? null : new Date(v2);
+const POSITIVE_WORDS = [
+"love","luv","miss","cute","sweet","good","nice",
+"acha","accha","achi","achha","sahi","mast",
+"wow","great","awesome","beautiful","handsome",
+"thank","thanks","thx","shukriya"
+];
+
+const NEGATIVE_WORDS = [
+"hate","angry","bad","annoying","boring",
+"gussa","bura","faltu","bekar","stupid"
+];
+
+// ===============================
+// HELPERS
+// ===============================
+
+function log(...args){
+  if(CONFIG.DEBUG) console.log(...args);
+}
+
+function setStatus(msg,isErr=false){
+  const el=document.getElementById("status");
+  if(!el) return;
+
+  el.textContent=msg;
+  el.style.color=isErr ? "#ef4444" : "#022";
+}
+
+function esc(str){
+  return (str||"")
+  .toString()
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;");
+}
+
+function clamp(v,a,b){
+  return Math.max(a,Math.min(b,v));
+}
+
+function avg(arr){
+  if(!arr.length) return null;
+  return arr.reduce((a,b)=>a+b)/arr.length;
+}
+
+function countEmojis(text){
+  try{
+    return (text.match(/(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu)||[]).length;
+  }catch{
+    return 0;
+  }
+}
+
+// ===============================
+// SENTIMENT ENGINE 
+// ===============================
+
+let sentiment = null;
+
+// check if library loaded
+if (typeof Sentiment !== "undefined") {
+  sentiment = new Sentiment();
+} else {
+  console.warn("Sentiment library not loaded.");
+}
+
+function sentimentScore(text){
+
+  if(!text) return 0;
+
+  let score = 0;
+
+  const lower = text.toLowerCase();
+
+  // =====================
+  // 1️⃣ English Sentiment
+  // =====================
+
+  if(sentiment){
+    try{
+      const result = sentiment.analyze(lower);
+      score += result.score || 0;
+    }catch{}
   }
 
-  async function pdfToText(file){
-    if(!window.pdfjsLib) throw new Error('pdfjsLib missing — open via local server.');
-    const ab = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({data:ab}).promise;
-    let out = '';
-    for(let i=1;i<=pdf.numPages;i++){
-      const page = await pdf.getPage(i);
-      const tc = await page.getTextContent();
-      out += tc.items.map(it => it.str).join(' ') + '\n';
+  // =====================
+  // 2️⃣ Emoji Sentiment
+  // =====================
+
+  const emojiCount = countEmojis(text);
+  score += emojiCount;
+
+  // =====================
+  // 3️⃣ Hindi / Hinglish
+  // =====================
+
+  POSITIVE_WORDS.forEach(word=>{
+    if(new RegExp(`\\b${word}\\b`).test(lower)){
+      score += 2;
     }
-    return out;
-  }
-  async function txtToText(file){ return await file.text(); }
+  });
 
-  function parseMessages(text){
-    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-    const msgs = []; let last = null;
-    for(let i=0;i<lines.length;i++){
-      const ln = lines[i];
-      let matched=false;
-      for(const p of patterns){
-        const m = ln.match(p);
-        if(m){
-          matched=true;
-          let ds=null, ts=null, name='', msg='';
-          if(m.length>=4){
-            if(/\d[\/\-\.\s]\d/.test(m[1]) && /\d:\d/.test(m[2])){
-              ds = m[1]; ts = m[2]; name = m[3].trim(); msg = (m[4]||'').trim();
-            } else {
-              if(/\d:\d/.test(m[1])){ ts = m[1]; name = m[2].trim(); msg = (m[3]||'').trim(); }
-              else { name = m[1].trim(); msg = (m[2]||'').trim(); }
-            }
-          }
-          const tsObj = tryParseDate(ds, ts);
-          msgs.push({ts: tsObj, name, text: msg, rawIndex: i});
-          last = msgs[msgs.length-1];
-          break;
+  NEGATIVE_WORDS.forEach(word=>{
+    if(new RegExp(`\\b${word}\\b`).test(lower)){
+      score -= 2;
+    }
+  });
+
+  return score;
+}
+// ===============================
+// DATE PARSER
+// ===============================
+
+function tryParseDate(ds,ts){
+
+  if(!ds && !ts) return null;
+
+  const tries=[];
+
+  if(ds && ts) tries.push(ds+" "+ts);
+  if(ds) tries.push(ds);
+
+  const parts=(ds||"").match(/\d+/g)||[];
+
+  if(parts.length>=3){
+    tries.push(`${parts[1]}/${parts[0]}/${parts[2]} ${ts||""}`);
+  }
+
+  for(const t of tries){
+    const v=Date.parse(t);
+    if(!isNaN(v)) return new Date(v);
+  }
+
+  return null;
+}
+
+// ===============================
+// FILE READERS
+// ===============================
+
+// PDF → TEXT
+async function pdfToText(file){
+
+  if(!window.pdfjsLib){
+    throw new Error("PDF.js library not loaded");
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+  let text = "";
+
+  for(let i = 1; i <= pdf.numPages; i++){
+
+    const page = await pdf.getPage(i);
+
+    const content = await page.getTextContent();
+
+    const pageText = content.items.map(item => item.str).join(" ");
+
+    text += pageText + "\n";
+  }
+
+  return text;
+}
+
+
+// TXT → TEXT
+async function txtToText(file){
+
+  if(!file) throw new Error("TXT file missing");
+
+  return await file.text();
+}
+
+
+// IMAGE → TEXT (OCR)
+async function imageToText(file){
+
+  if(!window.Tesseract){
+    throw new Error("Tesseract OCR library not loaded");
+  }
+
+  const result = await Tesseract.recognize(
+    file,
+    "eng",
+    {
+      logger: m => console.log(m)
+    }
+  );
+
+  return result.data.text;
+}
+
+async function extractZip(file){
+
+  const zip = await JSZip.loadAsync(file);
+
+  let chatText = "";
+
+  for(const name in zip.files){
+
+    const entry = zip.files[name];
+
+    if(entry.dir) continue;
+
+    const lower = name.toLowerCase();
+
+    // main chat file
+    if(lower.endsWith(".txt")){
+
+      const content = await entry.async("string");
+
+      chatText += content + "\n";
+    }
+
+  }
+
+  return chatText;
+}
+
+// ===============================
+// MESSAGE PARSER
+// ===============================
+
+const patterns=[
+/(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4}),?\s*(\d{1,2}:\d{2}(?::\d{2})?(?:\s?[APMapm]{2})?)\s*-\s*([^:]+):\s*(.*)$/,
+/(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4})\s+(\d{1,2}:\d{2})\s*-\s*([^:]+):\s*(.*)$/,
+/^\[?(\d{1,2}:\d{2})\]?\s*-?\s*([^:]+):\s*(.*)$/,
+/^([^:]{1,140}):\s*(.*)$/
+];
+
+function parseMessages(text){
+
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+
+  const msgs=[];
+  let last=null;
+
+  for(let i=0;i<lines.length;i++){
+
+    const ln=lines[i];
+    let matched=false;
+
+    for(const p of patterns){
+
+      const m=ln.match(p);
+
+      if(!m) continue;
+
+      matched=true;
+
+      let ds=null,ts=null,name="",msg="";
+
+      if(m.length>=4){
+
+        if(/\d[\/\-\.\s]\d/.test(m[1]) && /\d:\d/.test(m[2])){
+          ds=m[1];
+          ts=m[2];
+          name=m[3].trim();
+          msg=(m[4]||"").trim();
         }
+        else if(/\d:\d/.test(m[1])){
+          ts=m[1];
+          name=m[2].trim();
+          msg=(m[3]||"").trim();
+        }
+        else{
+          name=m[1].trim();
+          msg=(m[2]||"").trim();
+        }
+
       }
-      if(!matched){
-        if(last) last.text += ' ' + ln;
-        else msgs.push({ts:null, name:'', text:ln, rawIndex:i});
-      }
+
+      const tsObj=tryParseDate(ds,ts);
+
+      msgs.push({
+        ts:tsObj,
+        name,
+        text:msg,
+        sentiment:sentimentScore(msg),
+        rawIndex:i
+      });
+
+      last=msgs[msgs.length-1];
+      break;
     }
-    return msgs;
+
+    if(!matched){
+      if(last) last.text+=" "+ln;
+    }
+
   }
 
-  // ---------- Love theorem computation ----------
-  function computeLove(msgs, targetName){
-    const targetNorm = (targetName||'').toLowerCase().trim();
-    const parts = {}; let totalChars=0, totalEmojis=0;
-    const hourly = Array.from({length:24}, ()=>0);
+  return msgs;
+}
 
-    for(const m of msgs){
-      const n = (m.name||'').trim() || '[unknown]';
-      if(!parts[n]) parts[n] = {name:n, count:0, chars:0, emojis:0, replyTimes:[], initiations:0, days:new Set()};
-      parts[n].count++;
-      parts[n].chars += (m.text||'').length; totalChars += (m.text||'').length;
-      const em = countEmojis(m.text||''); parts[n].emojis += em; totalEmojis += em;
-      if(m.ts) hourly[new Date(m.ts).getHours()]++;
-      if(m.ts){ const d = new Date(m.ts); parts[n].days.add(d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()); }
+// ===============================
+// ANALYTICS ENGINE
+// ===============================
+function computeLove(msgs, targetName){
+
+  const targetNorm = (targetName || "").toLowerCase().trim();
+
+  const users = {};
+  const hourly = Array.from({length:24},()=>0);
+
+  // ===============================
+  // BUILD USER STATS
+  // ===============================
+
+  for(const m of msgs){
+
+    const name = (m.name || "").trim() || "[unknown]";
+
+    if(!users[name]){
+      users[name] = {
+        name,
+        count:0,
+        chars:0,
+        emojis:0,
+        replyTimes:[],
+        days:new Set(),
+        initiations:0
+      };
     }
 
-    // segments => initiations
-    let seg = null; const segments = [];
-    for(let i=0;i<msgs.length;i++){
-      const m = msgs[i];
-      if(!seg) seg = {startBy: (m.name||'').trim(), msgs:[m]};
-      else {
-        const prev = msgs[i-1];
-        let gap = 0;
-        if(prev.ts && m.ts) gap = (m.ts - prev.ts)/(1000*60);
-        if(gap > 30){ segments.push(seg); seg = {startBy:(m.name||'').trim(), msgs:[m]}; }
-        else seg.msgs.push(m);
+    const u = users[name];
+
+    u.count++;
+    u.chars += (m.text || "").length;
+    u.emojis += countEmojis(m.text || "");
+
+    if(m.ts){
+      hourly[m.ts.getHours()]++;
+      u.days.add(m.ts.toDateString());
+    }
+
+  }
+
+  // ===============================
+  // TARGET USER DETECTION
+  // ===============================
+
+  const targetKey = Object.keys(users).find(k=>{
+    const name = k.toLowerCase().trim();
+    return name === targetNorm || name.includes(targetNorm);
+  });
+
+  if(!targetKey){
+    return {targetKey:null};
+  }
+
+  const t = users[targetKey];
+
+  // ===============================
+  // REPLY TIME ANALYSIS
+  // ===============================
+
+  for(let i=0;i<msgs.length-1;i++){
+
+    const a = msgs[i];
+    const b = msgs[i+1];
+
+    if(!a.ts || !b.ts) continue;
+
+    if(a.name !== b.name){
+
+      const mins = (b.ts - a.ts) / (1000*60);
+
+      if(b.name === targetKey && mins >= 0 && mins < 1440){
+        t.replyTimes.push(mins);
       }
-    }
-    if(seg) segments.push(seg);
-    for(const s of segments){ if(parts[s.startBy]) parts[s.startBy].initiations++; }
 
-    // reply times (A->B then B gets reply time)
-    for(let i=0;i<msgs.length-1;i++){
-      const a = msgs[i], b = msgs[i+1];
-      if(a.ts && b.ts && (a.name||'').trim() !== (b.name||'').trim()){
-        const mins = (b.ts - a.ts)/(1000*60);
-        const bn = (b.name||'').trim();
-        if(parts[bn]) parts[bn].replyTimes.push(mins);
-      }
     }
 
-    // find target key
-    const targetKey = Object.keys(parts).find(k => k.toLowerCase().includes(targetNorm) || (targetNorm && k.toLowerCase()===targetNorm)) || null;
-    if(!targetKey) return {parts, hourly, targetKey:null};
+  }
 
-    const t = parts[targetKey];
-    const avgReply = (t.replyTimes.length) ? (t.replyTimes.reduce((a,b)=>a+b,0)/t.replyTimes.length) : null;
+  const avgReply = t.replyTimes.length ? avg(t.replyTimes) : null;
 
-    // R mapping: avgReply -> 0..30
-    let R = 0;
-    if(avgReply === null) R = 0;
-    else if(avgReply < 2) R = 30;
+  let R = 0;
+
+  if(avgReply !== null){
+
+    if(avgReply < 2) R = 30;
     else if(avgReply < 10) R = 25;
     else if(avgReply < 30) R = 20;
     else if(avgReply < 60) R = 10;
-    else R = 0;
+    else R = 5;
 
-    // E: emoji score 0..20
-    const E = Math.min(20, t.emojis * 3);
+  }
 
-    // M: message balance vs 'you' (most frequent other)
-    const others = Object.keys(parts).filter(k=>k!==targetKey);
-    const youKey = others.length ? others.sort((a,b)=>parts[b].count - parts[a].count)[0] : null;
-    const youCount = youKey ? parts[youKey].count : 1;
-    const ratio = t.count / (youCount || 1);
-    // map: ratio 0 ->0, 0.5->5,1->10,1.5->15,2+->20
-    let M = Math.round(clamp((Math.min(ratio,2) / 2) * 20, 0, 20));
+  // ===============================
+  // EMOJI SCORE
+  // ===============================
 
-    // C: consistency days
-    const allDates = msgs.filter(m=>m.ts).map(m=>new Date(m.ts));
-    const spanDays = allDates.length ? Math.max(1, Math.ceil((Math.max(...allDates.map(d=>d.getTime())) - Math.min(...allDates.map(d=>d.getTime())))/(1000*60*60*24))) : 1;
-    const activeDays = t.days.size;
-    const C = Math.round(clamp((activeDays / spanDays) * 20, 0, 20));
+  const E = clamp(t.emojis * 3,0,20);
 
-    const loveRaw = 50 + R + E + M + C; // as given
-    const lovePercent = Math.round(clamp(((loveRaw - 50) / (140 - 50)) * 100, 0, 100));
+  // ===============================
+  // MESSAGE BALANCE
+  // ===============================
 
-    // build participant summary
-    const summary = {};
-    for(const k of Object.keys(parts)){
-      const p = parts[k];
-      const avgR = p.replyTimes.length ? Math.round((p.replyTimes.reduce((a,b)=>a+b,0)/p.replyTimes.length)*10)/10 : null;
-      summary[k] = {name:p.name, messages:p.count, emojis:p.emojis, initiations:p.initiations, avgReplyMin:avgR, activeDays:p.days.size, avgLen: p.count?Math.round(p.chars/p.count):0};
+  const others = Object.keys(users).filter(k => k !== targetKey);
+
+  let M = 0;
+
+  if(others.length){
+
+    const youKey = others.sort((a,b)=>users[b].count-users[a].count)[0];
+
+    const ratio = t.count / Math.max(1,users[youKey].count);
+
+    M = Math.round(clamp((Math.min(ratio,2)/2)*20,0,20));
+
+  }
+
+  // ===============================
+  // CONSISTENCY
+  // ===============================
+
+  const dates = msgs.filter(m=>m.ts).map(m=>m.ts.getTime());
+
+  let C = 0;
+
+  if(dates.length){
+
+    const spanDays = Math.max(
+      1,
+      Math.ceil((Math.max(...dates)-Math.min(...dates))/(86400000))
+    );
+
+    C = Math.round(clamp((t.days.size/spanDays)*20,0,20));
+
+  }
+
+  // ===============================
+  // SENTIMENT SCORE
+  // ===============================
+
+  let sentimentTotal = 0;
+
+  msgs.forEach(m=>{
+    if(m.name === targetKey){
+      sentimentTotal += m.sentiment || 0;
+    }
+  });
+
+  const S = clamp(sentimentTotal/8,0,CONFIG.MAX_SENTIMENT);
+
+  // ===============================
+  // NIGHT CHAT ACTIVITY
+  // ===============================
+
+  let night = 0;
+
+  msgs.forEach(m=>{
+
+    if(!m.ts) return;
+
+    const h = m.ts.getHours();
+
+    if((h >= CONFIG.NIGHT_START || h <= CONFIG.NIGHT_END) && m.name === targetKey){
+      night++;
     }
 
-    return {parts, summary, hourly, targetKey, youKey, components:{R,E,M,C}, loveRaw, lovePercent, avgReply};
+  });
+
+  const N = clamp(night/5,0,10);
+
+  // ===============================
+  // FINAL LOVE SCORE
+  // ===============================
+
+  const loveRaw =
+    CONFIG.BASE_SCORE +
+    R + E + M + C + S + N;
+
+  const lovePercent = Math.round(
+    clamp(
+      (loveRaw - CONFIG.BASE_SCORE) /
+      (CONFIG.MAX_SCORE - CONFIG.BASE_SCORE) * 100,
+      0,
+      100
+    )
+  );
+
+  // ===============================
+  // RETURN RESULT
+  // ===============================
+
+  return {
+    users,
+    hourly,
+    targetKey,
+    components:{R,E,M,C,S,N},
+    loveRaw,
+    lovePercent
+  };
+
+}
+
+// ===============================
+// UI PREVIEW
+// ===============================
+
+function renderPreview(msgs){
+
+  const box=document.getElementById("preview");
+  box.innerHTML="";
+
+  const list = msgs;   // <-- yahi change hai
+
+  const tbl=document.createElement("table");
+
+  tbl.innerHTML =
+  "<thead><tr><th>#</th><th>Time</th><th>Name</th><th>Message</th></tr></thead>";
+
+  const tb=document.createElement("tbody");
+
+  list.forEach((m,i)=>{
+
+    const tr=document.createElement("tr");
+
+    tr.innerHTML=
+    `<td>${i+1}</td>
+     <td>${m.ts?new Date(m.ts).toLocaleString():""}</td>
+     <td>${esc(m.name)}</td>
+     <td>${esc(m.text.slice(0,120))}</td>`;
+
+    tb.appendChild(tr);
+
+  });
+
+  tbl.appendChild(tb);
+  box.appendChild(tbl);
+
+}
+
+// ===============================
+// CHART ENGINE
+// ===============================
+
+function renderDominance(users){
+
+  const canvas = document.getElementById("dominanceChart");
+  const ctx = canvas.getContext("2d");
+
+  if(canvas.chart){
+    canvas.chart.destroy();
   }
 
-  // ---------- charts & UI ----------
-  let chartHour=null, chartShare=null, chartReply=null;
+  const names = Object.keys(users);
+  const counts = names.map(n=>users[n].count);
 
-  // helper to ensure canvases have actual drawing size
-  function ensureCanvasSize(canvas){
-    if(!canvas) return;
-    // set width based on parent width but give a fixed pixel height to avoid 0-size rendering
-    const parent = canvas.parentElement;
-    const w = Math.max(400, Math.min(1200, parent.clientWidth || 900));
-    canvas.width = w;
-    canvas.height = 260;
-    // also set inline style to make Chart.js responsive behavior consistent
-    canvas.style.width = '100%';
-    canvas.style.height = '260px';
+  const total = counts.reduce((a,b)=>a+b,0);
+
+  const colors=[
+    "#06b6d4",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+    "#6366f1",
+    "#8b5cf6",
+    "#ec4899",
+    "#14b8a6"
+  ];
+
+  const chart = new Chart(ctx,{
+
+    type:"doughnut",
+
+    data:{
+      labels:names,
+      datasets:[{
+        data:counts,
+        backgroundColor:names.map((_,i)=>colors[i%colors.length]),
+        borderWidth:1
+      }]
+    },
+
+    options:{
+
+      responsive:true,
+      maintainAspectRatio:false,
+
+      cutout:"60%",
+
+      plugins:{
+
+        legend:{
+          position:"bottom",
+          labels:{
+            padding:15,
+            usePointStyle:true
+          }
+        },
+
+        tooltip:{
+          callbacks:{
+            label(context){
+
+              const value = context.raw;
+              const percent = ((value/total)*100).toFixed(1);
+
+              return `${context.label}: ${value} messages (${percent}%)`;
+            }
+          }
+        }
+
+      }
+
+    }
+
+  });
+
+  canvas.chart = chart;
+
+  return chart;
+}
+// ===============================
+// MAIN APP
+// ===============================
+
+let chartInstances = [];
+
+document.getElementById("analyze").addEventListener("click", async () => {
+
+  const fileInput = document.getElementById("file");
+  const targetInput = document.getElementById("target");
+
+  const files = Array.from(fileInput.files);
+  const target = targetInput.value.trim();
+
+  const preview = document.getElementById("preview");
+  const report = document.getElementById("report");
+  const badge = document.getElementById("badge");
+
+  // ===============================
+  // UI RESET
+  // ===============================
+
+  preview.innerHTML = "";
+  badge.textContent = "Love —";
+  report.style.display = "none";
+
+  // destroy previous charts
+  chartInstances.forEach(c => c.destroy());
+  chartInstances = [];
+
+  // remove old dynamic cards
+  document.querySelectorAll(".dynamic-card").forEach(el => el.remove());
+
+  // ===============================
+  // VALIDATION
+  // ===============================
+
+  if (!files.length) {
+    setStatus("Please upload at least one file.", true);
+    return;
   }
 
-  function renderPreview(msgs){
-    const box = document.getElementById('preview'); box.innerHTML = '';
-    const list = msgs.slice(0,25);
-    if(!list.length){ box.innerHTML = '<div class="small">Preview empty — parsing failed or file format different.</div>'; return; }
-    const tbl = document.createElement('table');
-    tbl.innerHTML = '<thead><tr><th>#</th><th>Time</th><th>Name</th><th>Message</th></tr></thead>';
-    const tb = document.createElement('tbody');
-    list.forEach((m,i)=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td>${i+1}</td><td>${m.ts?new Date(m.ts).toLocaleString():''}</td><td>${esc(m.name)}</td><td>${esc((m.text||'').slice(0,140))}${(m.text||'').length>140?'…':''}</td>`; tb.appendChild(tr); });
-    tbl.appendChild(tb); box.appendChild(tbl);
+  if (!target) {
+    setStatus("Please enter a target name.", true);
+    return;
   }
 
-  function renderResult(res, msgs, target){
-    const root = document.getElementById('report'); root.style.display='block'; root.innerHTML = '';
-    if(!res.targetKey){
-      root.innerHTML = `<div class="small">Target "<strong>${esc(target)}</strong>" parsed participants me nahi mila. Preview check karein (exact name use karen).</div>`;
+  const MAX_SIZE = 30 * 1024 * 1024;
+
+  setStatus("Preparing files...");
+
+  try {
+
+    let combinedText = "";
+
+    // ===============================
+    // FILE PROCESSOR
+    // ===============================
+ 
+    const processFile = async (file) => {
+
+      const name = file.name.toLowerCase();
+
+      try{
+
+        // ZIP
+        if(name.endsWith(".zip")){
+
+          setStatus(`Extracting ZIP: ${file.name}`);
+
+          return await extractZip(file);
+
+        }
+
+        // PDF
+        if(name.endsWith(".pdf") || file.type === "application/pdf"){
+
+          setStatus(`Reading PDF: ${file.name}`);
+
+          return await pdfToText(file);
+
+        }
+
+        // TXT
+        if(name.endsWith(".txt") || file.type === "text/plain"){
+
+          setStatus(`Reading TXT: ${file.name}`);
+
+          return await txtToText(file);
+
+        }
+
+        // IMAGE OCR
+        if(/\.(png|jpg|jpeg|webp)$/i.test(name)){
+
+          setStatus(`Running OCR: ${file.name}`);
+
+          return await imageToText(file);
+
+        }
+
+        return "";
+
+      }catch(err){
+
+        console.error("File processing failed:",file.name,err);
+
+        return "";
+
+      }
+
+    };
+
+    // ===============================
+    // PROCESS FILES
+    // ===============================
+
+    const texts = await Promise.all(files.map(processFile));
+
+    combinedText = texts.join("\n");
+
+    if (!combinedText.trim()) {
+      setStatus("No readable text found.", true);
       return;
     }
 
-    root.innerHTML += `<h3>Love Theorem Result — <small>${esc(res.targetKey)}</small></h3>`;
-    root.innerHTML += `<div class="small">Components: <strong>R</strong> (reply-time) <strong>E</strong> (emoji) <strong>M</strong> (message-balance) <strong>C</strong> (consistency)</div>`;
+    // ===============================
+    // PARSE MESSAGES
+    // ===============================
 
-    const comp = res.components;
-    root.innerHTML += `<div style="margin-top:10px"><table><tbody>
-      <tr><td>R (reply-time)</td><td>${comp.R} / 30</td></tr>
-      <tr><td>E (emoji)</td><td>${comp.E} / 20</td></tr>
-      <tr><td>M (message-balance)</td><td>${comp.M} / 20</td></tr>
-      <tr><td>C (consistency)</td><td>${comp.C} / 20</td></tr>
-    </tbody></table></div>`;
+    setStatus("Parsing chat messages...");
 
-    root.innerHTML += `<div style="margin-top:10px" class="card">
-      <div class="small">Love Theorem (raw): <strong>${res.loveRaw}</strong> — Normalized: <strong>${res.lovePercent}%</strong></div>
-      <div style="margin-top:8px" class="meter"><div style="width:${res.lovePercent}%; background:${res.lovePercent>=80? 'var(--good)': res.lovePercent>=55? 'var(--warn)': 'var(--bad)'}"></div></div>
-      <div style="margin-top:8px" class="small"><strong>Verdict:</strong> ${res.lovePercent>=80? 'Haan — strong interest.' : res.lovePercent>=55? 'Maybe — friendly / kuch interest.' : res.lovePercent>=35? 'Shayad nahi — neutral.' : 'Nahin — low interest.'}</div>
-    </div>`;
+    const msgs = parseMessages(combinedText);
 
-    // participant table
-    let rows = `<h4 style="margin-top:12px">Participants summary</h4><table><thead><tr><th>Name</th><th>Msgs</th><th>AvgLen</th><th>AvgReply(min)</th><th>Emojis</th><th>ActiveDays</th></tr></thead><tbody>`;
-    Object.keys(res.summary).sort((a,b)=>res.summary[b].messages - res.summary[a].messages).forEach(k=>{ const p=res.summary[k]; rows += `<tr><td>${esc(p.name)}</td><td>${p.messages}</td><td>${p.avgLen}</td><td>${p.avgReplyMin!==null?p.avgReplyMin:'N/A'}</td><td>${p.emojis}</td><td>${p.activeDays}</td></tr>`; });
-    rows += '</tbody></table>';
-    root.innerHTML += rows;
+    if (!msgs.length) {
+      setStatus("No chat messages detected.", true);
+      return;
+    }
 
-    // charts
-    root.innerHTML += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-      <div class="card" style="margin:0"><strong>Messages by hour</strong><canvas id="hourChart"></canvas></div>
-      <div class="card" style="margin:0"><strong>Message share</strong><canvas id="shareChart"></canvas></div>
-    </div>`;
+    renderPreview(msgs);
 
-    const ch = document.getElementById('hourChart'); const cs = document.getElementById('shareChart');
-    ensureCanvasSize(ch); ensureCanvasSize(cs);
-    try{
-      if(chartHour) chartHour.destroy();
-      chartHour = new Chart(ch.getContext('2d'), {
-        type:'bar',
-        data:{ labels:Array.from({length:24},(_,i)=>i+':00'), datasets:[{ label:'Messages', data:res.hourly, backgroundColor:'rgba(6,182,212,0.6)' }] },
-        options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
-      });
-    }catch(e){ console.error(e); setStatus('Hour chart error — check console.'); }
+    // ===============================
+    // ANALYSIS
+    // ===============================
 
-    try{
-      const entries = Object.keys(res.summary).map(k=>({k,v:res.summary[k].messages,name:res.summary[k].name})).sort((a,b)=>b.v-a.v);
-      const top = entries.slice(0,6); const others = entries.slice(6).reduce((a,b)=>a+b.v,0);
-      const labels = top.map(t=>t.name); const data = top.map(t=>t.v); if(others>0){ labels.push('Others'); data.push(others); }
-      if(chartShare) chartShare.destroy();
-      chartShare = new Chart(cs.getContext('2d'), {
-        type:'pie',
-        data:{ labels, datasets:[{ data, backgroundColor: labels.map((_,i)=>`hsl(${(i*60)%360} 70% 55%)`) }] },
-        options:{ responsive:true, maintainAspectRatio:false }
-      });
-    }catch(e){ console.error(e); setStatus('Share chart error — check console.'); }
+    setStatus(`Analyzing ${msgs.length} messages from chat...`);
 
-    // reply-time plot
-    const replyData = buildReplyPlot(msgs, res.targetKey);
-    root.innerHTML += `<div class="card" style="margin-top:12px"><strong>Reply-time plot</strong><div class="small">X = your message index, Y = reply minutes. You auto-detected: <strong>${esc(replyData.youName||'(unknown)')}</strong></div><canvas id="replyPlot"></canvas><div id="replyNote" class="small" style="margin-top:6px"></div></div>`;
-    const cr = document.getElementById('replyPlot'); ensureCanvasSize(cr);
-    const note = document.getElementById('replyNote');
-    try{
-      if(chartReply) chartReply.destroy();
-      if(!replyData.points.length){
-        note.textContent = 'Reply-time plot empty — not enough alternating messages detected or auto-detection of "you" failed. Try different target name or check preview.';
-      } else {
-        note.textContent = '';
-        chartReply = new Chart(cr.getContext('2d'), {
-          type:'line',
-          data:{ labels: replyData.points.map(p=>p.x), datasets:[{ label:'Reply minutes', data: replyData.points.map(p=>p.y), borderColor:'#06b6d4', backgroundColor:'rgba(6,182,212,0.12)', fill:true, tension:0.2, pointRadius:4 }] },
-          options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ title:{display:true,text:'Your message index'}}, y:{ title:{display:true,text:'Reply time (minutes)'} } } }
-        });
-      }
-    }catch(e){ console.error(e); setStatus('Reply plot error — check console.'); }
+    const result = computeLove(msgs, target);
 
-    // download json
-    document.getElementById('downloadJson').style.display='inline-block';
-    const out = {target:res.targetKey, components:res.components, loveRaw:res.loveRaw, lovePercent:res.lovePercent, summary:res.summary};
-    const jb = new Blob([JSON.stringify(out,null,2)], {type:'application/json'}); const ju = URL.createObjectURL(jb);
-    document.getElementById('downloadJson').onclick = ()=>{ const a=document.createElement('a'); a.href=ju; a.download='love-prediction.json'; a.click(); };
+    if (!result || !result.targetKey) {
+      setStatus("Target name not found in chat.", true);
+      return;
+    }
 
-    // badge
-    document.getElementById('badge').textContent = `Love: ${res.loveRaw} (${res.lovePercent}%)`;
+    // ===============================
+    // SHOW REPORT
+    // ===============================
+
+    report.style.display = "block";
+
+    // ===============================
+    // RENDER CHARTS
+    // ===============================
+
+    chartInstances.push(renderDominance(result.users));
+
+    // ===============================
+    // LOVE SCORE BADGE
+    // ===============================
+
+    badge.innerHTML = `
+      <div style="font-size:20px;font-weight:700">
+        ❤️ Love Score: ${result.lovePercent}%
+      </div>
+      <div style="font-size:12px;margin-top:4px">
+        ${getLoveMeaning(result.lovePercent)}
+      </div>
+    `;
+
+    // ===============================
+    // DYNAMIC REPORT CARDS
+    // ===============================
+
+    const breakdown = document.createElement("div");
+    breakdown.className = "card dynamic-card";
+    breakdown.style.marginTop = "20px";
+
+    breakdown.innerHTML = `
+      <h3>💡 Love Score Breakdown</h3>
+
+      R (Reply Speed): ${result.components.R}/30 <br>
+      E (Emoji Usage): ${result.components.E}/20 <br>
+      M (Message Balance): ${result.components.M}/20 <br>
+      C (Consistency): ${result.components.C}/20 <br>
+      S (Sentiment): ${result.components.S}/20 <br>
+      N (Night Chats): ${result.components.N}/10
+    `;
+
+    report.appendChild(breakdown);
+
+    // Relationship stage card
+
+    const stage = document.createElement("div");
+    stage.className = "card dynamic-card";
+    stage.style.marginTop = "15px";
+
+    stage.innerHTML = `
+      <h3>🧠 AI Relationship Stage</h3>
+      <p>${relationshipStage(result.lovePercent)}</p>
+    `;
+
+    report.appendChild(stage);
+
+    // Flirting probability
+
+    const flirting = Math.min(100, Math.round(result.lovePercent * 1.2));
+
+    const flirtCard = document.createElement("div");
+    flirtCard.className = "card dynamic-card";
+    flirtCard.style.marginTop = "15px";
+
+    flirtCard.innerHTML = `
+      <h3>❤️ Flirting Probability</h3>
+      <p>${flirting}%</p>
+    `;
+
+    report.appendChild(flirtCard);
+
+    setStatus("Prediction complete ✅");
+
+  } catch (error) {
+
+    console.error("Analysis failed:", error);
+    setStatus("Unexpected error occurred.", true);
+
   }
 
-  // build reply plot points
-  function buildReplyPlot(msgs, targetKey){
-    const names = Array.from(new Set(msgs.map(m=> (m.name||'').trim())));
-    const others = names.filter(n=> n!==targetKey);
-    const youName = others.length ? others.sort((a,b)=> msgs.filter(m=>m.name===b).length - msgs.filter(m=>m.name===a).length)[0] : null;
-    const points=[]; let yourIndex=0;
-    for(let i=0;i<msgs.length-1;i++){
-      const a=msgs[i], b=msgs[i+1];
-      if((a.name||'').trim() === youName){
-        yourIndex++;
-        if(b && (b.name||'').trim() === targetKey && a.ts && b.ts){
-          const mins = (b.ts - a.ts)/(1000*60);
-          points.push({x: yourIndex, y: Math.round(mins*10)/10});
-        }
-      }
-    }
-    return {youName, points};
-  }
+});
 
-  // ---------- main ----------
-  document.getElementById('analyze').addEventListener('click', async ()=>{
-    const f = document.getElementById('file').files[0];
-    const target = (document.getElementById('target').value||'').trim();
-    document.getElementById('preview').innerHTML=''; document.getElementById('report').style.display='none';
-    document.getElementById('downloadJson').style.display='none';
-    document.getElementById('badge').textContent = 'Love —';
-    if(!f){ setStatus('Kripya file select karein.', true); return; }
-    setStatus('Reading file — browser me...');
+// ===============================
+// LOVE SCORE MEANING
+// ===============================
 
-    try{
-      let text = '';
-      if((f.type && f.type === 'application/pdf') || f.name.toLowerCase().endsWith('.pdf')) text = await pdfToText(f);
-      else text = await txtToText(f);
+function getLoveMeaning(score){
 
-      setStatus('Parsing messages...');
-      const msgs = parseMessages(text);
-      // store for debug
-      window.__LAST_MSGS = msgs;
-      if(!msgs.length){ setStatus('Koi message parse nahi hua — WhatsApp .txt export try karein.', true); return; }
-      renderPreview(msgs);
-      setStatus('Computing Love Theorem...');
-      const res = computeLove(msgs, target);
-      // compute default hourly if missing
-      if(!res.hourly){ res.hourly = Array.from({length:24}, ()=>0); msgs.forEach(m=>{ if(m.ts) res.hourly[new Date(m.ts).getHours()]++; }); }
-      renderResult(res, msgs, target);
-      setStatus('Prediction complete ✅');
-    } catch(err){
-      console.error(err);
-      setStatus('Error: ' + (err.message || err), true);
-    }
-  });
+  if(score >= 80) return "🔥 Strong romantic interest";
+  if(score >= 60) return "😊 High attraction";
+  if(score >= 40) return "🙂 Friendly interaction";
+  if(score >= 25) return "😐 Neutral conversation";
+  return "❄️ Low interest";
+
+}
+
+
+// ===============================
+// RELATIONSHIP STAGE AI
+// ===============================
+
+function relationshipStage(score){
+
+  if(score > 80) return "💘 Romantic Stage";
+  if(score > 60) return "💬 Flirting Stage";
+  if(score > 40) return "🙂 Friendly Stage";
+  if(score > 25) return "👋 Casual Stage";
+  return "🚫 Low Interaction";
+
+}
   </script>
 </body>
 </html>
