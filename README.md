@@ -155,11 +155,11 @@ If the format differs, update the parser regex in `parseMessages()`.
 
 | Avg Reply Time | Score |
 |------|------|
-<2 min → 30  
-<10 min → 25  
-<30 min → 20  
-<60 min → 10  
->60 min → 0  
+<2 min → | 30  
+<10 min → | 25  
+<30 min → | 20  
+<60 min → | 10  
+>60 min → | 0
 
 ---
 
