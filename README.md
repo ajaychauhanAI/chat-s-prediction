@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/platform-browser-blue)
 ![Language](https://img.shields.io/badge/language-JavaScript-yellow)
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-View%20Project-0ea5b7?style=for-the-badge)](YOUR_DEMO_LINK_HERE)
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-View%20Project-0ea5b7?style=for-the-badge)](https://ajaychauhanai.github.io/chat-s-prediction/)
 
 A browser-based WhatsApp chat analyzer that predicts interaction signals using behavioral analytics.
 
