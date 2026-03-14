@@ -1,153 +1,271 @@
-# message-analyser
+# 💙 Chat Love Predictor
 
-# Chat Love Predictor — README
+![Status](https://img.shields.io/badge/status-active-success)
+![Platform](https://img.shields.io/badge/platform-browser-blue)
+![Language](https://img.shields.io/badge/language-JavaScript-yellow)
 
-**Short name:** Love Theorem Predictor (single-file HTML)  
-**Language:** Hindi (UI Hindi labels) / Code: HTML + CSS + JS  
-**Purpose:** WhatsApp chat (.txt / .pdf) ko browser mein parse karke heuristic "Love Theorem" apply karta hai:
-> **Love = 50 + R + E + M + C**
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-View%20Project-0ea5b7?style=for-the-badge)](YOUR_DEMO_LINK_HERE)
 
-Jahan:
-- **R** = Reply-time score (0–30) — jitna jaldi reply, utna bada score.  
-- **E** = Emoji score (0–20) — jitne emojis, utna bada score.  
-- **M** = Message balance score (0–20) — target aur aapke beech messages ka balance.  
-- **C** = Consistency score (0–20) — kitne alag dino mein target active raha (span ke hisaab se).
+A browser-based WhatsApp chat analyzer that predicts interaction signals using behavioral analytics.
 
-Final output:
-- **loveRaw** (numeric, ~50..140)  
-- **lovePercent** (normalized 0..100%) — easy verdict:
-  - >=80% → Haan — strong interest
-  - 55–79% → Maybe — friendly / kuch interest
-  - 35–54% → Shayad nahi — neutral
-  - <35% → Nahin — low interest
+The system applies a heuristic formula called the **Love Theorem**:
+
+> **Love = 50 + R + E + M + C + S + N**
+
+The analyzer processes chat data **locally in the browser**, meaning no chat data is uploaded to any server.
 
 ---
 
-## Files included
-- `chat-love-predictor.html` — single-file app (HTML + CSS + JS). Copy & open in browser.
-- (Optional) `chat-love-predictor-fixed.html` — chart fixes version (if needed).
+# 🚀 Features
+
+- WhatsApp chat parsing
+- Multi-format file support (.txt / .pdf / .zip / image OCR)
+- Conversation interaction analysis
+- Sentiment detection (English + Hinglish + Emoji)
+- Reply speed analysis
+- Chat consistency detection
+- Night chat interaction detection
+- Conversation dominance visualization
+- Relationship stage prediction
+- Flirting probability estimation
+- Interactive charts using Chart.js
 
 ---
 
-## Quick setup & run (local)
-1. Copy the provided single-file HTML and save as `chat-love-predictor.html`.  
-2. Open the file in a browser:
-   - Simple: double-click the `.html` file.
-   - If PDF parsing (pdf.js worker) gives a worker error when opened using `file://`, run a simple local server:
-     ```
-     python -m http.server 8000
-     ```
-     Then open: `http://localhost:8000/chat-love-predictor.html`.
+# 🧠 Love Theorem Components
+
+| Component | Description | Range |
+|--------|-------------|------|
+| R | Reply Time Score | 0 – 30 |
+| E | Emoji Engagement Score | 0 – 20 |
+| M | Message Balance Score | 0 – 20 |
+| C | Chat Consistency Score | 0 – 20 |
+| S | Sentiment Score | 0 – 20 |
+| N | Night Chat Activity | 0 – 10 |
 
 ---
 
-## How to use (step-by-step)
-1. Open `chat-love-predictor.html` in browser.  
-2. `File upload` — choose WhatsApp exported `.txt` (recommended) or `.pdf`.  
-   - For WhatsApp: use "Export chat" → "Without Media" to get `.txt`. This format is easiest to parse.  
-3. `Target name` — type the person’s name you want to check (partial match allowed).  
-4. Click **Predict Love**.  
-5. You will see:
-   - Parsed preview (first 25 messages) — check names exactly as parsed.  
-   - Participant summary (messages, avg reply time, emojis, active days).  
-   - Component values (R, E, M, C).  
-   - Love raw and normalized percent + Hindi verdict.  
-   - Charts:
-     - Messages by hour (bar)
-     - Message share (pie)
-     - Reply-time plot (X = your message index, Y = reply minutes)
+# 📊 Prediction Output
+
+| Metric | Description |
+|------|-------------|
+| loveRaw | Raw interaction score |
+| lovePercent | Normalized prediction score |
+
+Prediction scale:
+
+| Score | Meaning |
+|------|--------|
+| 80 – 100 | Strong romantic interest |
+| 60 – 79 | High attraction |
+| 40 – 59 | Friendly interaction |
+| 25 – 39 | Casual conversation |
+| 0 – 24 | Low interest |
 
 ---
 
-## Input format examples (WhatsApp .txt)
-Parser recognizes formats like:
+# 📈 Charts & Analytics
 
-Agar aapke export ka format different ho to paste 8–12 sample lines here (anonymize) so parser can be adjusted.
+The analyzer generates multiple visual charts to understand conversation behavior.
 
----
+### Conversation Dominance
+Doughnut chart showing message share between participants.
 
-## Explanation of components (implementation detail)
-- **R (Reply-time 0–30)**  
-  - avgReply < 2 min → R = 30  
-  - avgReply < 10 → R = 25  
-  - avgReply < 30 → R = 20  
-  - avgReply < 60 → R = 10  
-  - else → R = 0
+### Chat Activity by Hour
+Bar chart showing when conversations occur during the day.
 
-- **E (Emojis 0–20)**  
-  - E = min(20, emojis_count * 3)
+### Reply Time Analysis
+Line / scatter chart visualizing reply speed patterns.
 
-- **M (Message balance 0–20)**  
-  - Choose the most frequent "other" participant as *you*.  
-  - ratio = target_messages / your_messages (capped at 2)  
-  - M = round((min(ratio,2)/2) * 20)  
-    - ratio 0 → 0, 1 → 10, 2 → 20 (roughly)
+### Sentiment Distribution
+Chart tracking emotional tone across the conversation.
 
-- **C (Consistency 0–20)**  
-  - activeDays = distinct days target sent messages  
-  - spanDays = total days between first and last timestamp  
-  - C = round((activeDays / spanDays) * 20), capped 0..20
+These charts help detect patterns like:
 
-- **Normalization**  
-  - loveRaw in [50..140] is mapped to percent 0–100 as:
-    ```
-    lovePercent = ((loveRaw - 50) / (140 - 50)) * 100
-    ```
-  - This makes interpretation easier (0% = no interest per measure, 100% = maximal per these heuristics).
+- conversation balance
+- emotional tone
+- reply behavior
+- peak chat hours
 
 ---
 
-## Troubleshooting (common issues)
-- **Charts not visible / blank**  
-  - Make sure browser window is wide enough; the app sets canvas sizes.  
-  - If reply-time plot is empty: auto-detection of "you" may have failed. Check *Parsed preview* to see exact participant names — use that exact name in `Target name`.  
-  - If PDF upload fails: open via local server (see Setup).
+# 📂 Files Included
 
-- **Parsed preview shows garbage / 0 messages**  
-  - Your .txt format might differ. Paste 8–12 anonymized lines into chat to get parser adjusted.  
-  - Avoid exporting with "Include media" (media lines can disrupt parsing).
-
-- **Target not found**  
-  - Use exact name (case-insensitive substring match works). Check "Parsed preview" to copy the name.
+| File | Description |
+|------|-------------|
+chat-love-predictor.html | Main single-file application |
+chat-love-predictor-fixed.html | Optional chart fixes version |
 
 ---
 
-## Privacy & security
-- The single-file HTML runs **fully in your browser**; files are not uploaded to a server.  
-- If you paste content into chat or share parsed output, that will be visible in this conversation — remove any sensitive content beforehand.
+# ⚙️ Setup
+
+No installation required.
+
+Simply open the HTML file in your browser.
+
+chat-love-predictor.html
 
 ---
 
-## Example (fictional)
-Given:
-- Your messages: 60, Target messages: 40  
-- Avg reply (target) = 6 minutes → R ≈ 25  
-- Target emojis = 5 → E = min(20,5*3) = 15  
-- Ratio = 40 / 60 = 0.666 → M ≈ 7  
-- Chat span = 20 days, activeDays (target) = 10 → C = 10  
-Then:
-- loveRaw = 50 + 25 + 15 + 7 + 10 = 107  
-- lovePercent ≈ 63% → Verdict: **Maybe — friendly / some interest**
+# 🌐 Optional Local Server
+
+If PDF parsing causes worker issues, run a local server:
+
+python -m http.server 8000
+
+Then open:
+
+http://localhost:8000/chat-love-predictor.html
 
 ---
 
-## If you want changes
-- Increase/decrease weight thresholds for R/E/M/C — open the HTML and edit the mapping functions (comments near `computeLove()` function).  
-- Want CSV export of reply-times or hover text on reply chart? I can add that.  
-- Parser adjustments for custom export formats: paste sample lines and I’ll update parser patterns.
+# 📖 How To Use
+
+1. Open the analyzer in your browser  
+2. Upload WhatsApp exported chat file  
+3. Enter the target person's name  
+4. Click **Analyze Chat**
+
+The analyzer will generate:
+
+- Parsed chat preview
+- Participant statistics
+- Love score prediction
+- Relationship stage
+- Flirting probability
+- Interactive charts
 
 ---
 
-## Quick dev notes (for maintainers)
-- Uses `pdf.js` (UMD) for PDF → text. Worker must be set via `pdfjsLib.GlobalWorkerOptions.workerSrc`.  
-- Uses `Chart.js` (v3+) for charts (`responsive:true`, `maintainAspectRatio:false`).  
-- Parser uses regex patterns — add or reorder to support other export layouts.
+# 📊 Input Format Example
+
+Typical WhatsApp export format:
+
+12/03/2026, 10:24 PM - Ajay: Hello  
+12/03/2026, 10:25 PM - Sneha: Hi  
+
+If the format differs, update the parser regex in `parseMessages()`.
 
 ---
 
-## Contact / support
-Agar parser ya prediction me kuch theek nahi lag raha ho, to **8–12 sample lines** yahan paste karo (anonymize names/messages) — main `parseMessages()` regex turant adjust kar dunga aur updated HTML provide kar dunga.
+# 🔍 Component Calculation
+
+### Reply Score (R)
+
+| Avg Reply Time | Score |
+|------|------|
+<2 min → 30  
+<10 min → 25  
+<30 min → 20  
+<60 min → 10  
+>60 min → 0  
 
 ---
 
-**Good luck!**
+### Emoji Score (E)
+
+E = min(20, emojis_count × 3)
+
+---
+
+### Message Balance (M)
+
+ratio = target_messages / your_messages
+
+M = round((min(ratio,2) / 2) × 20)
+
+---
+
+### Chat Consistency (C)
+
+C = (activeDays / spanDays) × 20
+
+---
+
+### Sentiment Score (S)
+
+Calculated using:
+
+- Sentiment.js
+- Emoji signals
+- Hinglish positive / negative words
+
+---
+
+### Night Chat Score (N)
+
+Messages sent between:
+
+10 PM – 2 AM
+
+Night conversations may indicate stronger engagement.
+
+---
+
+# 🔐 Privacy
+
+The analyzer processes all chat data **locally in the browser**.
+
+- No server upload
+- No cloud processing
+- No chat storage
+
+Your conversations remain private.
+
+---
+
+# ⚠️ Limitations
+
+Predictions are heuristic-based.
+
+Accuracy depends on:
+
+- chat duration
+- conversation frequency
+- emotional tone
+- reply patterns
+
+Very short chats may produce lower accuracy.
+
+---
+
+# 🛠 Technology Stack
+
+| Technology | Purpose |
+|------|------|
+HTML5 | Interface |
+CSS3 | Styling |
+JavaScript | Core logic |
+Chart.js | Data visualization |
+pdf.js | PDF parsing |
+Tesseract.js | OCR processing |
+Sentiment.js | Sentiment analysis |
+
+---
+
+# 🔬 Future Improvements
+
+Planned upgrades:
+
+- Ghosting detection
+- Conversation energy analysis
+- Attachment pattern analysis
+- Emotional intensity scoring
+- AI conversation classifier
+
+---
+
+## 👨‍💻 Author
+
+**Ajay Chauhan**  
+BCA — Data Science & Artificial Intelligence  
+Babu Banarasi Das University (BBDU), Lucknow  
+
+Passionate about building AI-powered tools, data analytics systems, and innovative web applications.
+
+---
+
+# 📜 License
+
+Educational and experimental use.
