@@ -71,12 +71,6 @@ The analyzer generates multiple visual charts to understand conversation behavio
 ### Conversation Dominance
 Doughnut chart showing message share between participants.
 
-### Chat Activity by Hour
-Bar chart showing when conversations occur during the day.
-
-### Reply Time Analysis
-Line / scatter chart visualizing reply speed patterns.
-
 ### Sentiment Distribution
 Chart tracking emotional tone across the conversation.
 
@@ -93,8 +87,8 @@ These charts help detect patterns like:
 
 | File | Description |
 |------|-------------|
-chat-love-predictor.html | Main single-file application |
-chat-love-predictor-fixed.html | Optional chart fixes version |
+index.html | Main html-file |
+main.js | JavaScript file version |
 
 ---
 
