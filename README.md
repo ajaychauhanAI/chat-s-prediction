@@ -102,18 +102,6 @@ chat-love-predictor.html
 
 ---
 
-# 🌐 Optional Local Server
-
-If PDF parsing causes worker issues, run a local server:
-
-python -m http.server 8000
-
-Then open:
-
-http://localhost:8000/chat-love-predictor.html
-
----
-
 # 📖 How To Use
 
 1. Open the analyzer in your browser  
